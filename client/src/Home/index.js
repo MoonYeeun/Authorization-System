@@ -80,7 +80,6 @@ class Home extends Component {
     .then(res => {
       //access token 만료된 경우
       if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
-
         verifyRefreshToken('/users/verifyToken1', this.state.headers) // refresh token 서버로 보낸다. 
         .then(res => {
           if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
