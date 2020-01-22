@@ -10,7 +10,7 @@ export const sendLoginInfo = obj => {
     user_pwd: obj.user_pwd
   })
 };
-
+//로그인 페이지 
 class Signin extends Component {
   state = {
     emailEntered: '',
@@ -114,16 +114,18 @@ class Signin extends Component {
           <button type="submit" value="Submit" className="btn btn-login btn-outline-primary btn-block">
             Login
           </button>         
-          <div className="signup">
+          <div className="btn-signup">
           <Link to="/Signup">
             <button type="signup" className="btn btn-outline-secondary btn-block">
               signup
             </button>
           </Link>
           </div>
+          <Link to="/">
           <div>
             <button type="find_password" className="btn btn-link">forgot your password ?  </button>
           </div>
+          </Link>
         </form>
       </div>
     );

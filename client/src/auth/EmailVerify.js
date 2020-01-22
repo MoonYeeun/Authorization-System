@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './emailVerify.css';
 import { Link } from "react-router-dom";
 
-//btn button_cancel btn-outline-primary btn-block
+//이메일 인증 완료 후 나타나는 페이지 
 class EmailVerify extends Component {
     render() {
         return (

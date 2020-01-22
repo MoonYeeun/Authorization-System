@@ -12,6 +12,7 @@ export const sendUserInfo = obj => {
     user_pwd: obj.user_pwd
   })
 };
+//회원가입 페이지 
 class Signup extends Component {
   state = {
       nameEntered: '',

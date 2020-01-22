@@ -20,7 +20,6 @@ class UserInfo extends Component {
       content : '', 
       user_id : '',
       user_name : '',
-      //url : '',
       headers : {
         'authorization': localStorage.getItem('access_token'),
         'Accept' : 'application/json',

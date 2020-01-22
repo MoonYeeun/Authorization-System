@@ -41,11 +41,11 @@
   .btn-login{
     margin-top: 10%;
   } /* 비밀번호 찾기 버튼 */
-  .findpwd{
+  .btn-findpwd{
     margin-top: 10px;
     color:  grey;
   } /* 회원가입 버튼 */
-  .signup{
+  .btn-signup{
     margin-top: 10px;
   }
   .buttonGroup{

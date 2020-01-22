@@ -16,7 +16,7 @@ export const verifyRefreshToken = (url, headers) => {
   }
   return axios.post(url, body, {headers})
 };
-
+//로그인 후 보이는 메인화면
 class Home extends Component {
  
   constructor(props) {
@@ -29,20 +29,16 @@ class Home extends Component {
         'authorization': localStorage.getItem('access_token'),
         'Accept' : 'application/json',
         'Content-Type': 'application/json'
-      },
-      url: '/users/verifyToken1' 
+      }
     };
   };
   //로그아웃 처리 
   handleLogout = () => {
-    this.setState({
-      url: '/users/logout'
-    });
-    verifyToken(this.state.url,this.state.headers)
+    verifyToken('/users/logout',this.state.headers)
     .then(res => {
         //access token 만료된 경우
         if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
-          verifyRefreshToken(this.state.url,this.state.headers) // refresh token 서버로 보낸다. 
+          verifyRefreshToken('/users/logout',this.state.headers) // refresh token 서버로 보낸다. 
           .then(res => {
             if(res.data.state === 'success') { //로그아웃 성공
                 alert('Goodbye !');
@@ -82,15 +78,12 @@ class Home extends Component {
   }
   //페이지 렌더링 전 토큰 검사 
   componentDidMount() {
-    this.setState({
-      url: '/users/verifyToken1'
-    });
-    verifyToken(this.state.url, this.state.headers)
+    verifyToken('/users/verifyToken1', this.state.headers)
     .then(res => {
       //access token 만료된 경우
       if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
 
-        verifyRefreshToken(this.state.url, this.state.headers) // refresh token 서버로 보낸다. 
+        verifyRefreshToken('/users/verifyToken1', this.state.headers) // refresh token 서버로 보낸다. 
         .then(res => {
           if(res.status === '200') { //새롭게 발급받은 access token 저장 
             this.setState ({
@@ -131,8 +124,7 @@ class Home extends Component {
           {/* <Switch> */}
           <Route exact path={this.props.match.path} component={Content_Home} />
           <Route path="/Home/Content_Home"  component={Content_Home} />
-          <Route path="/Home/UserInfo" render={(props) => <UserInfo {...props} 
-          logged = {this.state.logged} accessToken = {this.state.accessToken} refreshToken = {this.state.refreshToken} headers = {this.state.headers}/>} />         
+          <Route path="/Home/UserInfo" render={(props) => <UserInfo {...props} logged = {this.state.logged}/>} />     
           {/* </Switch> */}
         </div>      
       </Router>
