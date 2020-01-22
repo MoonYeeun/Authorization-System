@@ -99,11 +99,11 @@ class Signup extends Component {
         pwdCheck : e.target.value
     });
   }
-  doesPasswordMatch() {
+  doesPasswordMatch = () =>{
     const { pwdEntered, pwdCheck } = this.state;
     return pwdEntered === pwdCheck;
   }
-  confirmPasswordClassName() {
+  confirmPasswordClassName = () => {
     const { pwdCheck } = this.state;
   
     if (pwdCheck) {

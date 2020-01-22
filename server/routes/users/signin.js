@@ -51,11 +51,6 @@ router.post('/', async (req, res) => {
                         message : "Internal Server Error"
                     })
                 })
-                // res.cookie('token', {
-                //     'access_token' : access_token,
-                //     'refresh_token' : refresh_token
-                // }, {signed : true});
-
                 res.status(201).send( {
                     message : "Login Success",
                     data : {

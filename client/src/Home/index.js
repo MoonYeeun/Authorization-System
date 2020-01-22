@@ -6,7 +6,6 @@ import Content_Home from './Content_Home';
 import UserInfo from './UserInfo';
 import axios from "axios";
 
-
 export const verifyToken = (url, headers) => {
   return axios.get(url, {headers})
 };
@@ -18,13 +17,12 @@ export const verifyRefreshToken = (url, headers) => {
 };
 //로그인 후 보이는 메인화면
 class Home extends Component {
- 
   constructor(props) {
     super(props);
     this.state = { 
       accessToken : localStorage.getItem('access_token'),
       refreshToken : localStorage.getItem('refresh_token'),
-      logged : false,
+      logged : false, // 로그인 되었는지 확인하는 변수 
       headers : {
         'authorization': localStorage.getItem('access_token'),
         'Accept' : 'application/json',
@@ -85,12 +83,14 @@ class Home extends Component {
 
         verifyRefreshToken('/users/verifyToken1', this.state.headers) // refresh token 서버로 보낸다. 
         .then(res => {
-          if(res.status === '200') { //새롭게 발급받은 access token 저장 
+          if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
+            console.log('여기여기여기');
             this.setState ({
                 logged : true
             })
             window.localStorage.setItem('access_token', res.data.message.access_token);
           }
+          console.log('mount 안'+this.state.logged);
         })
         .catch(error => {
           alert('유효하지 않은 접근입니다.');
@@ -100,10 +100,11 @@ class Home extends Component {
         console.log(res.data.message);
         alert('유효하지 않은 요청입니다.');
         window.location.href="/";
-      }
-      this.setState ({
-        logged : true
+      } else {
+        this.setState ({
+          logged : true
         })
+      }
     })
     .catch(error => {
       window.location.href="/";

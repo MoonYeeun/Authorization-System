@@ -11,12 +11,12 @@ export const verifyRefreshToken = (url, headers) => {
   }
   return axios.post(url, body, {headers})
 };
+//사용자 정보 보여주는 페이지 
 class UserInfo extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      status: 'false',
       content : '', 
       user_id : '',
       user_name : '',
@@ -48,17 +48,14 @@ class UserInfo extends Component {
     }
   }
   componentDidMount() {
-    console.log('did mount');
     verifyToken('/users/userInfo', this.state.headers)
     .then(res => {
       //access token 만료된 경우
       if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
-
         verifyRefreshToken('/users/userInfo', this.state.headers) // refresh token 서버로 보낸다. 
         .then(res => {
-          if(res.status === '200') { //새롭게 발급받은 access token 저장 
+          if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
             this.setState ({
-                status : true,
                 user_id : res.data.message.user_id,
                 user_name : res.data.message.user_name
             })
@@ -75,7 +72,6 @@ class UserInfo extends Component {
         window.location.href="/";
       }
       this.setState ({
-        status : true,
         user_id : res.data.message.user_id,
         user_name : res.data.message.user_name
       })
@@ -84,13 +80,13 @@ class UserInfo extends Component {
       console.log('error 발생');
       window.location.href="/";
     });
-    this.handleUserInfo(this.state.status);
+    this.handleUserInfo(this.props.logged);
   }
   render() {
     return (
       <div className="content">
         <h2 className="info_title">{this.state.content}</h2>
-        <p>{this.state.user_name}</p>
+        <h3 className="info_content">{this.state.user_name}</h3>
       </div>
     );
   }

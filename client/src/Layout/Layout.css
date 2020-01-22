@@ -32,6 +32,13 @@
     margin-top: 5%;
 }
 .info_title {
+    display: inline-block;
     font-family: 'Open Sans', sans-serif;
+    margin-right: 10px;
     color: rgb(76, 156, 202);
+}
+.info_content {
+    display: inline-block;
+    font-family: 'Open Sans', sans-serif;
+    color: rgb(204, 139, 120);
 }
