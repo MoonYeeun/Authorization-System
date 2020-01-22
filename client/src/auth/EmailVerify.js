@@ -1,6 +1,6 @@
-import React, {Component} from './node_modules/react';
+import React, {Component} from 'react';
 import './emailVerify.css';
-import { Link } from "./node_modules/react-router-dom";
+import { Link } from "react-router-dom";
 
 //이메일 인증 완료 후 나타나는 페이지 
 class EmailVerify extends Component {

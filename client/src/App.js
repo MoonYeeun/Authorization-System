@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import Signin from './Auth/Signin';
 import Signup from './Auth/Signup';
-import EmailVerify from './auth/EmailVerify';
+import EmailVerify from './Auth/EmailVerify';
 import Home  from './Home';
 import { Route, BrowserRouter as Router } from "react-router-dom";
 class App extends Component {

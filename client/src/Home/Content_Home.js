@@ -5,7 +5,7 @@ function Content_Home({match}) {
   return (
     <>
     <div className="content">
-      <h2>Hi, This is Home.</h2>
+      <h2 className="info_title">Hi !  This is Home.</h2>
     </div>
    </>
   );
