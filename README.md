@@ -1,5 +1,9 @@
 # Authorization-System
-- 개발환경 : (server) Node.js / (client) React / (DB) Mysql , Redis
+- 개발환경 : 
+  - Node.js 
+  - React 
+  - Mysql 
+  - Redis
 
 - 기능 : 
   - 회원가입
