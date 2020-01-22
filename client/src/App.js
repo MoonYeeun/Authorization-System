@@ -1,0 +1,26 @@
+import React, {Component} from 'react';
+import './App.css';
+import Signin from './auth/Signin';
+import Signup from './auth/Signup';
+import EmailVerify from './auth/EmailVerify';
+import Home  from './Home';
+import { Route, BrowserRouter as Router } from "react-router-dom";
+class App extends Component {
+
+  render() {
+    return (
+      <Router>
+        <div className="App">
+         <Route exact path="/" component={Signin} />
+         <Route path="/Signin" component={Signin}/>
+         <Route path="/Signup" component={Signup}/>
+         <Route path="/EmailVerify" component={EmailVerify}/>
+         <Route path="/Home" component={Home} />
+      </div>      
+      </Router>
+     
+    );
+  }
+}
+
+export default App;

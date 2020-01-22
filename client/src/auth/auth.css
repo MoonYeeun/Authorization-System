@@ -1,0 +1,72 @@
+.auth {
+    text-align: center;
+  }
+  
+  .App-logo {
+    height: 40vmin;
+    pointer-events: none;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
+  
+  .App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  .App-link {
+    color: #61dafb;
+  } /* 회원가입 폼 */
+  .SignupForm {
+    max-width: 300px;
+    margin: 20% auto 0;
+    padding: 20px;
+    border: 1px solid lightgray;
+  } /* 로그인 폼 */
+  .SigninForm {
+    max-width: 300px;
+    margin: 20% auto 0;
+    padding: 20px;
+    border: 1px solid lightgrey;
+  } /* 로그인 버튼 */
+  .btn-login{
+    margin-top: 10%;
+  } /* 비밀번호 찾기 버튼 */
+  .findpwd{
+    margin-top: 10px;
+    color:  grey;
+  } /* 회원가입 버튼 */
+  .signup{
+    margin-top: 10px;
+  }
+  .buttonGroup{
+    display: flex;
+    justify-content: space-between;
+    margin-inline-end: 10px;
+    margin-top: 30px;
+  }
+  .button_submit{
+    flex: 1;
+  }
+  .button_cancel{
+    flex: 1;
+    margin-left: 10px;
+  }
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
