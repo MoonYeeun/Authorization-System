@@ -21,4 +21,7 @@ router.use('/logout', logout);
 const verifyToken = require('./verifyToken1');
 router.use('/verifyToken1', verifyToken);
 
+//사용자 정보 가져오기
+const userInfo = require('./userInfo');
+router.use('/userInfo', userInfo);
 module.exports = router;

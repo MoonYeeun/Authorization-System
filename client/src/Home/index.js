@@ -7,46 +7,42 @@ import UserInfo from './UserInfo';
 import axios from "axios";
 
 
-export const verifyToken = (url) => {
-  return axios.get(url, {
-    headers: {
-      'authorization': localStorage.getItem('access_token'),
-      'Accept' : 'application/json',
-      'Content-Type': 'application/json'
-    }
-  })
+export const verifyToken = (url, headers) => {
+  return axios.get(url, {headers})
 };
-export const verifyRefreshToken = (url) => {
+export const verifyRefreshToken = (url, headers) => {
   let body = {
     refresh_token : localStorage.getItem('refresh_token')
   }
-  return axios.post(url, body, {
-    headers: {
-      'authorization': localStorage.getItem('access_token'),
-      'Accept' : 'application/json',
-      'Content-Type': 'application/json'
-    }
-  })
+  return axios.post(url, body, {headers})
 };
 
 class Home extends Component {
-
+ 
   constructor(props) {
     super(props);
     this.state = { 
       accessToken : localStorage.getItem('access_token'),
       refreshToken : localStorage.getItem('refresh_token'),
-      logged : false
+      logged : false,
+      headers : {
+        'authorization': localStorage.getItem('access_token'),
+        'Accept' : 'application/json',
+        'Content-Type': 'application/json'
+      },
+      url: '/users/verifyToken1' 
     };
   };
   //로그아웃 처리 
   handleLogout = () => {
-    var url = '/users/logout';
-    verifyToken(url)
+    this.setState({
+      url: '/users/logout'
+    });
+    verifyToken(this.state.url,this.state.headers)
     .then(res => {
         //access token 만료된 경우
         if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
-          verifyRefreshToken(url) // refresh token 서버로 보낸다. 
+          verifyRefreshToken(this.state.url,this.state.headers) // refresh token 서버로 보낸다. 
           .then(res => {
             if(res.data.state === 'success') { //로그아웃 성공
                 alert('Goodbye !');
@@ -86,19 +82,21 @@ class Home extends Component {
   }
   //페이지 렌더링 전 토큰 검사 
   componentDidMount() {
-    var url = '/users/verifyToken1'
-    verifyToken(url)
+    this.setState({
+      url: '/users/verifyToken1'
+    });
+    verifyToken(this.state.url, this.state.headers)
     .then(res => {
       //access token 만료된 경우
       if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
 
-        verifyRefreshToken(url) // refresh token 서버로 보낸다. 
+        verifyRefreshToken(this.state.url, this.state.headers) // refresh token 서버로 보낸다. 
         .then(res => {
           if(res.status === '200') { //새롭게 발급받은 access token 저장 
             this.setState ({
                 logged : true
             })
-            window.localStorage.setItem('access_token', res.data.data.access_token);
+            window.localStorage.setItem('access_token', res.data.message.access_token);
           }
         })
         .catch(error => {
@@ -127,13 +125,14 @@ class Home extends Component {
           <Header />
           <div className="gnb">
             <NavLink exact className="tab" activeClassName="active" to={`${this.props.match.path}/Content_Home`}>Home</NavLink>
-            <NavLink className="tab" activeClassName="active" to={`${this.props.match.path}/UserInfo`}>User Info</NavLink>
+            <NavLink className="tab" activeClassName="active" to="/Home/UserInfo">User Info</NavLink>
             <NavLink className="tab" activeClassName="active" to="" onClick={this.handleLogout}>Logout</NavLink>
           </div>
           {/* <Switch> */}
           <Route exact path={this.props.match.path} component={Content_Home} />
           <Route path="/Home/Content_Home"  component={Content_Home} />
-          <Route path="/Home/UserInfo" render={(props) => <UserInfo {...props} logged = {this.state.logged}/>} />         
+          <Route path="/Home/UserInfo" render={(props) => <UserInfo {...props} 
+          logged = {this.state.logged} accessToken = {this.state.accessToken} refreshToken = {this.state.refreshToken} headers = {this.state.headers}/>} />         
           {/* </Switch> */}
         </div>      
       </Router>
