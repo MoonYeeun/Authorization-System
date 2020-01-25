@@ -1,10 +1,12 @@
 .emailverfiyForm {
-    width: 60vw;
+    width: 50vw;
     margin: 20% auto 0;
     padding: 20px;
     border: 1px solid lightgray;
 }
-
+.fail_title {
+  color : red
+}
 .page {
     display: flex;
     justify-content: center;

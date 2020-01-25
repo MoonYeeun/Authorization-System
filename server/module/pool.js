@@ -22,10 +22,10 @@ module.exports = {	// 두 개의 메소드 module화
 		//let result;
 		console.log('queryParam_arr 들어옴');
 
-		return new Promise(function(resolve,reject){
-			pool.getConnection(function(err, connection){
+		return new Promise( (resolve,reject) => {
+			pool.getConnection( (err, connection) => {
 				if(err) throw err;
-				connection.query(query,value, function(err,result){
+				connection.query(query,value, (err,result) => {
 					if(err) return reject(err);
 					connection.release();
 					resolve(result);

@@ -69,7 +69,7 @@ class Signin extends Component {
       setTimeout(()=> {
         alert(res.data.message);
         //로그인 성공 시
-        if(res.status === 201){
+        if(res.data.message === 'Login Success'){
           console.log(res.data.data.access_token);
           console.log(res.data.data.refresh_token);
           window.localStorage.setItem('access_token', res.data.data.access_token);

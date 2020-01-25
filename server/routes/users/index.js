@@ -10,7 +10,7 @@ const signup = require('./signup');
 router.use('/signup',signup);
 
 //이메일 인증
-const emailverify = require('./emailverify');
+const emailverify = require('./emailVerify');
 router.use('/emailverify',emailverify);
 
 //로그아웃
@@ -24,4 +24,5 @@ router.use('/verifyToken1', verifyToken);
 //사용자 정보 가져오기
 const userInfo = require('./userInfo');
 router.use('/userInfo', userInfo);
+
 module.exports = router;
