@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-	
+
 const db = require('../../module/pool.js');
 const verify = require('../../controller/verify');
 
@@ -13,25 +13,23 @@ router.get('/', async (req, res) => {
     .catch((err) => {
         res.status(500).send(err);
     });
-    if(result.state === 'fail') {
-        res.send(result);
-    } else {
+    if(result.state === 'fail') res.send(result);
+    else {
         let checkQuery = 'SELECT * FROM user WHERE user_id = ?';
-        let checkResult = await db.queryParam_Arr(checkQuery, [result.user_id]);
-        if (!checkResult) {
+        let checkResult = await db.queryParam_Arr(checkQuery, [result.user_id])
+        .catch((err) => {
             res.send( {
                 state: 'fail',
                 message : "Internal Server Error"
             });
-        } else {
-            res.status(200).send({
-                state: 'success',
-                message: {
-                    user_id: checkResult[0].user_id,
-                    user_name: checkResult[0].user_name
-                }
-            });
-        }
+        })
+        res.status(200).send({
+            state: 'success',
+            message: {
+                user_id: checkResult[0].user_id,
+                user_name: checkResult[0].user_name
+            }
+        });
     }
 });
 

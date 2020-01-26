@@ -2,13 +2,23 @@ import React, {Component} from 'react';
 import '../Layout/Layout.css'
 import axios from "axios";
 
-export const verifyToken = (url, headers) => {
+export const verifyToken = url => {
+  let headers = {
+    'authorization': localStorage.getItem('access_token'),
+    'Accept' : 'application/json',
+    'Content-Type': 'application/json'
+  };
   return axios.get(url, {headers})
 };
-export const verifyRefreshToken = (url, headers) => {
+export const verifyRefreshToken = url => {
   let body = {
     refresh_token : localStorage.getItem('refresh_token')
-  }
+  };
+  let headers = {
+    'authorization': localStorage.getItem('access_token'),
+    'Accept' : 'application/json',
+    'Content-Type': 'application/json'
+  };
   return axios.post(url, body, {headers})
 };
 //사용자 정보 보여주는 페이지 
@@ -19,12 +29,7 @@ class UserInfo extends Component {
     this.state = {
       content : '', 
       user_id : '',
-      user_name : '',
-      headers : {
-        'authorization': localStorage.getItem('access_token'),
-        'Accept' : 'application/json',
-        'Content-Type': 'application/json'
-      }
+      user_name : ''
     }
   }
 
@@ -48,11 +53,11 @@ class UserInfo extends Component {
     }
   }
   componentDidMount() {
-    verifyToken('/users/userInfo', this.state.headers)
+    verifyToken('/users/userInfo')
     .then(res => {
       //access token 만료된 경우
       if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
-        verifyRefreshToken('/users/userInfo', this.state.headers) // refresh token 서버로 보낸다. 
+        verifyRefreshToken('/users/userInfo') // refresh token 서버로 보낸다. 
         .then(res => {
           if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
             this.setState ({
