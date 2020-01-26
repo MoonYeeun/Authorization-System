@@ -18,8 +18,8 @@ const logout = require('./logout');
 router.use('/logout', logout);
 
 //토큰 검증
-const verifyToken = require('./verifyToken1');
-router.use('/verifyToken1', verifyToken);
+const verifyToken = require('./verifyToken');
+router.use('/verifyToken', verifyToken);
 
 //사용자 정보 가져오기
 const userInfo = require('./userInfo');

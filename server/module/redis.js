@@ -35,7 +35,6 @@ module.exports = {
                 else resolve(reply);
             })
         })
-
     },
     get : async (...args) => {
         const key = args[0];
@@ -48,7 +47,6 @@ module.exports = {
                 else resolve(reply);
             })
         })
-
     },
 
     del : async (...args) => {

@@ -9,7 +9,7 @@ class EmailVerifyFail extends Component {
             <div className="page">
                 <form className="emailverfiyForm" onSubmit={this.handleSubmit}>
                 <h3 className="fail_title">Fail to Email verified. </h3>
-                <p>Please check is it valid</p>
+                <p>Please retry Signup again</p>
                 <div>
                 <Link to="/Signin">
                 <button type="submit" className="fun-btn">

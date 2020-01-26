@@ -6,12 +6,22 @@ import Content_Home from './Content_Home';
 import UserInfo from './UserInfo';
 import axios from "axios";
 
-export const verifyToken = (url, headers) => {
+export const verifyToken = (url) => {
+  let headers = {
+    'authorization': localStorage.getItem('access_token'),
+    'Accept' : 'application/json',
+    'Content-Type': 'application/json'
+  }
   return axios.get(url, {headers})
 };
-export const verifyRefreshToken = (url, headers) => {
+export const verifyRefreshToken = (url) => {
   let body = {
     refresh_token : localStorage.getItem('refresh_token')
+  }
+  let headers = {
+    'authorization': localStorage.getItem('access_token'),
+    'Accept' : 'application/json',
+    'Content-Type': 'application/json'
   }
   return axios.post(url, body, {headers})
 };
@@ -20,29 +30,22 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      accessToken : localStorage.getItem('access_token'),
-      refreshToken : localStorage.getItem('refresh_token'),
       logged : false, // 로그인 되었는지 확인하는 변수 
-      headers : {
-        'authorization': localStorage.getItem('access_token'),
-        'Accept' : 'application/json',
-        'Content-Type': 'application/json'
-      }
     };
   };
   //로그아웃 처리 
   handleLogout = () => {
-    verifyToken('/users/logout',this.state.headers)
+    verifyToken('/users/logout')
     .then(res => {
         //access token 만료된 경우
         if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
-          verifyRefreshToken('/users/logout',this.state.headers) // refresh token 서버로 보낸다. 
+          verifyRefreshToken('/users/logout') // refresh token 서버로 보낸다. 
           .then(res => {
             if(res.data.state === 'success') { //로그아웃 성공
-                alert('Goodbye !');
                 this.setState ({
                     logged : false
                 })
+                alert('Goodbye !');
                 window.location.href="/";
             }
             else {
@@ -76,18 +79,17 @@ class Home extends Component {
   }
   //페이지 렌더링 전 토큰 검사 
   componentDidMount() {
-    verifyToken('/users/verifyToken1', this.state.headers)
+    verifyToken('/users/verifyToken', this.state.headers)
     .then(res => {
       //access token 만료된 경우
       if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
-        verifyRefreshToken('/users/verifyToken1', this.state.headers) // refresh token 서버로 보낸다. 
+        verifyRefreshToken('/users/verifyToken', this.state.headers) // refresh token 서버로 보낸다. 
         .then(res => {
           if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
-            console.log('여기여기여기');
             this.setState ({
                 logged : true
             })
-            window.localStorage.setItem('access_token', res.data.message.access_token);
+            window.localStorage.setItem('access_token', res.data.message);
           }
           console.log('mount 안'+this.state.logged);
         })

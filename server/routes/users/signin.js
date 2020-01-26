@@ -8,9 +8,9 @@ const redis = require('../../module/redis');
 
 //로그인
 router.post('/', async (req, res) => {
-    let {user_id, user_pw} = req.body;
+    let {user_id, user_pwd} = req.body;
 
-    if (!user_id || !user_pw) {
+    if (!user_id || !user_pwd) {
         console.log("NULL");
         res.status(200).send( {
             message : "Null Value"
@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
                 message : "Internal Server Error"
             })
         } else if (checkResult.length == 1) {     
-            let pwHashed = await crypto.pbkdf2(user_pw, checkResult[0].user_salt, 10000, 32, 'sha512');
+            let pwHashed = await crypto.pbkdf2(user_pwd, checkResult[0].user_salt, 10000, 32, 'sha512');
             //사용자 아이디 비밀번호 일치할 경우 
             if (pwHashed.toString('base64') == checkResult[0].user_pwd) {
                 // 발행할 토큰 생성

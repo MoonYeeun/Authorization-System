@@ -1,87 +1,83 @@
 const express = require('express');
 const router = express.Router();
 
-const jwt = require('../../module/jwt.js');
-//redis 접속
-var redis = require('redis');
-var client = redis.createClient(6379,'127.0.0.1');
+const verify = require('../../controller/verify');
+const redis = require('../../module/redis');
+const moment = require('moment');
 
-var moment = require('moment');
+var logout = async (user_id, time) => {
+    try {
+        await redis.del(user_id, 2);
+        await redis.set(user_id, time, 3);
+        return {
+            state : 'success',
+            message : 'Logout success !'
+        };
+    } catch(err) {
+        return {
+            state : 'fail',
+            message : err
+        };
+    }
+}
+
 //로그아웃
 router.get('/', async (req, res) => {
     let access_token = req.headers['authorization'];
-    const verify = jwt.verify(access_token);
-    if(verify.user_id){ // access token 유효한 경우
-        try {
-            await client.select(2);
-            await client.del(verify.user_id);
-            await client.select(3);
-            await client.set(verify.user_id,moment().format());
-            return res.status(201).send({
-                state: 'success',
-                message: 'Logout success !'
-            });
-        } catch(err) {
-            return res.send({
-                state : 'fail',
-                message : err
-            });
-        } 
-    } else { // access token 유효하지 않은 경우 refresh token 요청
-        res.send({
-            state : 'fail',
-            message: verify
+    let result = await verify.token_verify(access_token)
+    .catch((err) => {
+        res.status(500).send(err);
+    });
+    // access token 유효한 경우
+    if(result.state === 'success') {
+        let logout_result = await logout(result.user_id, moment().format())
+        .catch((err) => {
+            res.status(500).send(err);
         });
+        console.log('logout 성공');
+        res.send(logout_result);
+    } else {
+        res.send(result);
     }
 });
+
 // access token 만료 후 로그아웃 하려고 하는 경우 
 router.post('/', async (req, res) => {
     let access_token = req.headers['authorization'];
     let refresh_token = req.body.refresh_token;
+    let result = await verify.token_verify(access_token);
 
-    let verify = jwt.verify(access_token);
-    //access token 만료인 경우 -> refresh_token 검사 후 access token 새로 발행
-    if(verify === 'jwt expired') {
-        const payload = jwt.verify(access_token,{ignoreExpiration: true} );
-        try {
-            await client.select(2);
-            await client.hget(payload.user_id,'refresh_token', async function(err,reply){
-                if (err) return err;
-                else if(reply === refresh_token) {
-                    // 새로운 access token 생성
-                    access_token = jwt.sign(payload.user_id);
-                    console.log('새롭게 발급한 access ' + access_token);
-                    // refresh token 삭제 & logout db 에 사용자 저장 
-                    verify = jwt.verify(access_token);
-                    if(verify.user_id){ 
-                        await client.del(verify.user_id);
-                        await client.select(3);
-                        await client.set(verify.user_id,moment().format());
-                        console.log('로그아웃 완료');
-                        return res.status(201).send({
-                            state: 'success',
-                            message: 'Logout success !'
-                        });     
-                    }
-                } else { // 일치하지 않는 refresh token 보냈을 경우 
-                    return res.status(401).send({
-                        state : 'fail',
-                        message: 'refresh token is not valid'
-                    });   
-                }             
-            });
-            
-        } catch(err) {
-            return res.send({
-                state : 'fail',
-                message: err
-            });   
-        } 
-    } else { // 잘못된 access token 값
-        res.send({
-            state : 'fail',
-            message: verify
+    // access token 유효한 경우 
+    if(result.state === 'success') {
+        let logout_result = await logout(result.user_id, moment().format())
+        .catch((err) => {
+            res.send(err);
         });
+        console.log('logout 성공');
+        res.send(logout_result);
+    }
+    // access token 만료된 경우 
+    else if (result.state === 'fail' && result.message === 'jwt expired') {
+        // 만료된 토큰 유효성 검사 
+        let payload_result = await verify.token_verify(access_token, {ignoreExpiration: true});
+        // 로그아웃 된 사용자거나 유효하지 않은 경우 
+        if(payload_result.state === 'fail') res.status(401).send(payload_result);
+        else {
+            let refresh_result = await verify.refreshToken_verify(payload_result.user_id, refresh_token)
+            .catch((err) => {
+                res.status(500).send(err);
+            });
+            access_token = refresh_result.message; // 새로운 access token 저장
+            let logout_result = await logout(payload_result.user_id, moment().format())
+            .catch((err) => {
+                res.status(401).send(err);
+            });
+            console.log('logout 성공');
+            res.send(logout_result);
+        }
+    } else { // 잘못된 access token 값
+        console.log('잘못된 access 토큰 값');
+        res.status(401).send(result);
     }
 })
 module.exports = router;

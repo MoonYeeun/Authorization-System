@@ -22,7 +22,7 @@ router.get('/:emailCode', async (req, res) => {
     } else {
         let selectQuery = 'SELECT COUNT(*) count FROM user WHERE user_id = ?';
         let selectResult = await db.queryParam_Arr(selectQuery, [user_data.user_id]);
-
+        // 이미 등록된 사용자이거나 err 발생한 경우 
         if (!selectResult || selectResult[0].count == 1) {
             res.redirect('http://localhost:3000/EmailVerifyFail');
         } else {
