@@ -43,7 +43,8 @@ router.post('/', async (req, res) => {
                         message : "Login Success",
                         data : {
                             'access_token' : access_token,
-                            'refresh_token' : refresh_token
+                            'refresh_token' : refresh_token,
+                            'admin' : checkResult[0].admin
                         }
                     });
                 } catch(err) {

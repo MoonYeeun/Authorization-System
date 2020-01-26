@@ -73,7 +73,8 @@ class Signin extends Component {
           console.log(res.data.data.access_token);
           console.log(res.data.data.refresh_token);
           window.localStorage.setItem('access_token', res.data.data.access_token);
-          window.localStorage.setItem('refresh_token',res.data.data.refresh_token);
+          window.localStorage.setItem('refresh_token', res.data.data.refresh_token);
+          window.localStorage.setItem('admin', res.data.data.admin);
           window.location.href="/Home"
         }
         

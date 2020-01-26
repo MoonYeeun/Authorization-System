@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import { NavLink, Route, BrowserRouter as Router } from "react-router-dom";
 import Header from '../Layout/Header';
+import Footer from '../Layout/Footer';
 import '../Layout/Layout.css'
 import Content_Home from './Content_Home';
 import UserInfo from './UserInfo';
+import AdminPage from '../Home/AdminPage';
 import axios from "axios";
 
 export const verifyToken = (url) => {
@@ -31,6 +33,7 @@ class Home extends Component {
     super(props);
     this.state = { 
       logged : false, // 로그인 되었는지 확인하는 변수 
+      admin : localStorage.getItem('admin') // 관리자인지 확인
     };
   };
   //로그아웃 처리 
@@ -114,6 +117,7 @@ class Home extends Component {
 
   render() {
     console.log(this.state.logged);
+    console.log(this.state.admin);
     return (
       <Router>
         <div className="App">
@@ -126,8 +130,11 @@ class Home extends Component {
           {/* <Switch> */}
           <Route exact path={this.props.match.path} component={Content_Home} />
           <Route path="/Home/Content_Home"  component={Content_Home} />
-          <Route path="/Home/UserInfo" render={(props) => <UserInfo {...props} logged = {this.state.logged}/>} />     
+          <Route path="/Home/UserInfo" render={(props) => <UserInfo {...props} logged = {this.state.logged}/>} />  
+          <Route path="/Home/AdminPage" render={(props) => <AdminPage {...props} logged = {this.state.logged}
+          admin = {this.state.admin} />} />   
           {/* </Switch> */}
+          <Footer />
         </div>      
       </Router>
     );

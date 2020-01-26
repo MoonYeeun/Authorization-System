@@ -42,3 +42,25 @@
     font-family: 'Open Sans', sans-serif;
     color: rgb(204, 139, 120);
 }
+.footer {
+    padding:10px 0;
+    border-top: 1px solid lightgray;
+    flex: 1;
+    align-items: flex-end;
+    justify-content: center;
+    position:fixed; 
+    left:0px; 
+    bottom:0px; 
+    height:50px; 
+    width:100%; 
+}
+.img {
+    display: inline-block;
+    width: 30px;
+}
+.footer_title {
+    font-family: 'Open Sans', sans-serif;
+    display: inline-block;
+    color: darkgrey;
+    font-size: 12px;
+}
