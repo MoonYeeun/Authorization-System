@@ -65,6 +65,7 @@ class Home extends Component {
         } else if(res.data.state === 'fail' && res.data.message !== 'jwt expired') {
           console.log(res.data.message);
           alert('요청 실패. 다시 시도해 주세요');
+          window.location.href="/";
         } else { // access token 유효해서 로그아웃 성공한 경우 
             this.setState ({
                 logged : false

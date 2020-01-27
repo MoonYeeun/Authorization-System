@@ -25,4 +25,7 @@ router.use('/verifyToken', verifyToken);
 const userInfo = require('./userInfo');
 router.use('/userInfo', userInfo);
 
+// 유저 관리 
+const admin = require('./admin');
+router.use('/admin', admin);
 module.exports = router;
