@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto-promise');
 const secretKey = require('../config/secretKey.js').secret;
 
 module.exports = {
@@ -21,8 +20,6 @@ module.exports = {
       decoded = jwt.verify(token, secretKey, options);
     }
     catch(err) {
-      //if(err.message === 'jwt expired') console.log('expired token');
-      //else if(err.message === 'invalid token') console.log('invalid token');
       return err.message;
     }
 
