@@ -60,7 +60,7 @@ class Home extends Component {
         console.log(error);
       }); 
   }
-  
+  // 리프레시 토큰 검사 후 새로운 access token 발급
   requestAccessToken = (url) => {
     verifyRefreshToken(url)
     .then(res => {
