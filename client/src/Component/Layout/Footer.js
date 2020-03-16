@@ -10,7 +10,7 @@ class Footer extends Component {
             <div className="footer">
               <p className="footer_title">admin</p>
               <Link to='/Home/AdminPage'>
-                <img className="img" src={require('../img/admin.png')} alt="fireSpot"></img>
+                <img className="img" src={require('../../img/admin.png')} alt="fireSpot"></img>
               </Link>
             </div> 
         )  

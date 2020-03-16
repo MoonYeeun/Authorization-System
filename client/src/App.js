@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import Signin from './Component/Auth/Signin';
-import Signup from './Compoenet/Auth/Signup';
+import Signup from './Component/Auth/Signup';
 import EmailVerify from './Component/Auth/EmailVerify';
 import EmailVerifyFail from './Component/Auth/EmailVerifyFail';
 import Home  from './Component/Home';
