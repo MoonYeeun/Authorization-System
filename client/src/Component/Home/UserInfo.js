@@ -87,6 +87,7 @@ class UserInfo extends Component {
     });
     this.handleUserInfo(this.props.logged);
   }
+  
   render() {
     return (
       <div className="content">

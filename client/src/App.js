@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import './App.css';
-import Signin from './Auth/Signin';
-import Signup from './Auth/Signup';
-import EmailVerify from './Auth/EmailVerify';
-import EmailVerifyFail from './Auth/EmailVerifyFail';
-import Home  from './Home';
+import Signin from './Component/Auth/Signin';
+import Signup from './Compoenet/Auth/Signup';
+import EmailVerify from './Component/Auth/EmailVerify';
+import EmailVerifyFail from './Component/Auth/EmailVerifyFail';
+import Home  from './Component/Home';
 import { Route, BrowserRouter as Router } from "react-router-dom";
 class App extends Component {
 
