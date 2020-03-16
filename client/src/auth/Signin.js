@@ -14,48 +14,16 @@ export const sendLoginInfo = obj => {
 class Signin extends Component {
   state = {
     emailEntered: '',
-    isEmailValid: false,
     pwdEntered: '',
     token: ''
   }
-  //이메일 유효성 검증
-    vaildEmail = emailEntered => {
-      const emailRegExp = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/;
 
-    if (emailEntered.match(emailRegExp)) {
-      this.setState({
-        isEmailValid: true,
-        emailEntered
-      });
-    } else {
-      this.setState({
-        isEmailValid: false,
-        emailEntered
-      });
-    }
-  }
-  isEnteredEmailValid = () => {
-    const { emailEntered, isEmailValid } = this.state;
-  
-    if (emailEntered) return isEmailValid;
-  };
-
-  inputClassNameHelper = boolean => {
-    switch (boolean) {
-      case true:
-        return 'is-valid';
-      case false:
-        return 'is-invalid';
-      default:
-        return '';
-    }
-  };
-  // pwd 창 입력 시 
-  handlePwdChange = (e) => {
+  handleChange = (e) => {
     this.setState({
-      pwdEntered: e.target.value
-    });
+      [e.target.name]: e.target.value
+    })
   }
+
   //submit 버튼 입력 시 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -66,25 +34,23 @@ class Signin extends Component {
     sendLoginInfo(obj)
     .then(res => {
       console.log(res);
-      setTimeout(()=> {
-        alert(res.data.message);
-        //로그인 성공 시
-        if(res.data.message === 'Login Success'){
-          console.log(res.data.data.access_token);
-          console.log(res.data.data.refresh_token);
-          window.localStorage.setItem('access_token', res.data.data.access_token);
-          window.localStorage.setItem('refresh_token', res.data.data.refresh_token);
-          window.localStorage.setItem('admin', res.data.data.admin);
-          window.location.href="/Home"
-        }
-        
-      },0);
+      alert(res.data.message);
+      //로그인 성공 시
+      if(res.data.message === 'Login Success'){
+        console.log(res.data.data.access_token);
+        console.log(res.data.data.refresh_token);
+        window.localStorage.setItem('access_token', res.data.data.access_token);
+        window.localStorage.setItem('refresh_token', res.data.data.refresh_token);
+        window.localStorage.setItem('admin', res.data.data.admin);
+        window.location.href="/Home"
+      }
     })
     .catch(error => {
       console.log(error);
       alert(error);
     });
   }
+  
   render() {
     return (
       <div className="auth">
@@ -93,11 +59,12 @@ class Signin extends Component {
             <label htmlFor="emailInput">이메일</label>
             <input
               type="email"
-              className ={`form-control ${this.inputClassNameHelper(this.isEnteredEmailValid())}`}
+              className="form-control"
               id="emailInput"
-              aria-describedby="emailHelp"
+              value={this.state.emailEntered}
+              name= "emailEntered"
               placeholder="abc@gmail.com"
-              onChange={e=>this.vaildEmail(e.target.value)}
+              onChange={this.handleChange}
             />
           </div>
           <div className="form-group">
@@ -108,7 +75,8 @@ class Signin extends Component {
               id="pwdInput"
               placeholder="password"
               value={this.state.pwdEntered}
-              onChange={this.handlePwdChange}              
+              name="pwdEntered"
+              onChange={this.handleChange}              
             />
           </div>
 
