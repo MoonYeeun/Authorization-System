@@ -6,6 +6,7 @@ module.exports = {
     //access token 검증	
     token_verify : async (...args) => {
         const verify = jwt.verify(args[0], args[1]);
+        console.log(verify);
   
         return new Promise( async (resolve, reject) => {
             if(verify.user_id){
