@@ -11,8 +11,8 @@ var mailSender = {
             secure : false,
             requireTLS : true,
             auth : {
-                user : 'ggyeeungg95@gmail.com',
-                pass : '1226mye!'
+                user : '',
+                pass : ''
             }
         });
         console.log(param.to);
