@@ -22,14 +22,14 @@ class UserInfo extends Component {
     }
     return headers;
   }
-  
+
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.logged !== this.props.logged) {
       this.handleUserInfo(nextProps.logged);
     }
     return true;
   }
-
+  
   handleUserInfo = (status) => {
     if(status){
       this.setState({
@@ -63,28 +63,27 @@ class UserInfo extends Component {
       window.location.href="/";
     });
   }
-
-  componentDidMount() {
+  // user 목록 불러오기
+  getUserList= () => {
     axios.get('/users/userInfo', {headers :this.setHeaders()})
     .then(res => {
-      //access token 만료된 경우
-      if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
+      if(res.data.state === 'success') {
+        this.setState ({
+            user_id : res.data.message.user_id,
+            user_name : res.data.message.user_name
+        })
+      } else {
         this.requestAccessToken('/users/userInfo');
-      } else if(res.data.state === 'fail' && res.data.message !== 'jwt expired') {
-        console.log(res.data.message);
-        alert('유효하지 않은 요청입니다.');
-        window.location.href="/";
       }
-      this.setState ({
-        user_id : res.data.message.user_id,
-        user_name : res.data.message.user_name
-      })
     })
     .catch(error => {
-      console.log('error 발생');
-      window.location.href="/";
-    });
+        console.log('error 발생');
+        window.location.href="/";
+    });  
+  }
+  componentDidMount() {
     this.handleUserInfo(this.props.logged);
+    this.getUserList();
   }
   
   render() {
