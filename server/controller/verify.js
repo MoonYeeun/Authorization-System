@@ -6,7 +6,6 @@ module.exports = {
     //access token 검증	
     token_verify : async (...args) => {
         const verify = jwt.verify(args[0], args[1]);
-        console.log(verify);
   
         return new Promise( async (resolve, reject) => {
             if(verify.user_id){
@@ -50,9 +49,11 @@ module.exports = {
                     message: err
                 });
             });
-            if(result === args[1]) {
+
+            let refresh_verify = jwt.verify(args[1]);
+
+            if(result === args[1] && typeof refresh_verify.key !== 'undefined') {
                 let access_token = jwt.sign(args[0]);
-                console.log('새로운 access token '+ access_token);
                 resolve ({
                     state: 'success',
                     message: access_token
@@ -64,7 +65,6 @@ module.exports = {
                     message: 'token is not valid'
                 });                          
             }
-
         });
     }
 };
