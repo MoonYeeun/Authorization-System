@@ -24,13 +24,15 @@ var mailSender = {
             '<a href ="'+param.url+'">'+param.url+'</a>'
         };
         transporter.use('compile', inlineCss());
+        
         //메일 발송
-        let result = transporter.sendMail(message)
+        return new Promise (async (resolve, reject) => {
+            let result = await transporter.sendMail(message)
             .catch(err => {
-                console.log('err '+ err);
+                reject(err);
             })
-
-        return result; //발송 후 결과 값 전송
+            resolve(result); //발송 후 결과 값 전송
+        });
     }
 }
 

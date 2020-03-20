@@ -26,7 +26,13 @@ router.get('/:emailCode', async (req, res) => {
         else {
             //users table에 새로운 user 등록
             let insertQuery = 'INSERT INTO user (user_id, user_pwd, user_name, user_salt) values ( ?, ?, ?, ?)';
-            let insertResult = db.queryParam_Arr(insertQuery, [user_data.user_id, user_data.user_pwd, user_data.user_name, user_data.user_salt]);
+            let value  = [
+                user_data.user_id, 
+                user_data.user_pwd, 
+                user_data.user_name, 
+                user_data.user_salt
+            ]
+            let insertResult = db.queryParam_Arr(insertQuery, value);
     
             if (!insertResult) {
                 console.log("DB Insert Error");
