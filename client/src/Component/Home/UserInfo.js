@@ -44,43 +44,47 @@ class UserInfo extends Component {
     }
   }
   // 리프레시 토큰 검사 후 새로운 access token 발급
-  requestAccessToken = (url) => {
+  requestAccessToken = async (url) => {
     let body = {
       refresh_token : localStorage.getItem('refresh_token')
     }
-    axios.post(url, body, {headers :this.setHeaders()})
-    .then(res => {
-      if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
-        this.setState ({
-          user_id : res.data.message.user_id,
-          user_name : res.data.message.user_name
-        })
-        window.localStorage.setItem('access_token', res.data.message.access_token);
-      }
-    })
-    .catch(error => {
-      alert('유효하지 않은 접근입니다.');
-      window.location.href="/";
+    return new Promise((resolve, reject) => {
+      axios.post(url, body, {headers :this.setHeaders()})
+      .then(res => {
+        if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
+          window.localStorage.setItem('access_token', res.data.message);
+          resolve();
+        }
+      })
+      .catch(error => {
+        console.log("errr "+ error);
+        alert('유효하지 않은 접근입니다.');
+        reject();
+      });
     });
   }
   // user 목록 불러오기
-  getUserList= () => {
+  getUserList= async () => {
     axios.get('/users/userInfo', {headers :this.setHeaders()})
-    .then(res => {
+    .then(async res => {
       if(res.data.state === 'success') {
         this.setState ({
+            content: 'Hi !',
             user_id : res.data.message.user_id,
             user_name : res.data.message.user_name
         })
       } else {
-        this.requestAccessToken('/users/userInfo');
+        this.handleUserInfo(false);
+        await this.requestAccessToken('/users/verifyToken');
+        this.getUserList();
       }
     })
     .catch(error => {
-        console.log('error 발생');
+        console.log('error 발생 ' + error);
         window.location.href="/";
     });  
   }
+
   componentDidMount() {
     this.handleUserInfo(this.props.logged);
     this.getUserList();

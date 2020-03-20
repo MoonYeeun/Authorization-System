@@ -35,56 +35,51 @@ class Home extends Component {
       logged : false
     })
     axios.get('/users/logout', {headers :this.setHeaders()})
-    .then(res => {
-      //access token 만료된 경우
-      if(res.data.state === 'fail' && res.data.message === 'jwt expired'){
-        console.log('logout refresh 검사');
-        this.requestAccessToken('/users/verifyToken');
-
-        setTimeout(
-          function() {
-              if(this.state.logged === true) this.handleLogout();
-          }.bind(this),1000
-        );
-        
-      } else { // access token 유효해서 로그아웃 성공한 경우 
-        console.log('logout ?' + res.data.message);
+    .then(async res => {
+      if(res.data.state === 'success') {
         alert('Goodbye !');
         window.location.href="/";
+      } //access token 만료된 경우
+      else {        
+        await this.requestAccessToken('/users/verifyToken');
+        console.log('새로운 access 발급 성공');
+        this.handleLogout();
       }
     })
     .catch(error => {
-      console.log(error);
+      window.location.href="/";
     }); 
   }
+
   // 리프레시 토큰 검사 후 새로운 access token 발급
-  requestAccessToken = (url) => {
+  requestAccessToken = async (url) => {
     let body = {
       refresh_token : localStorage.getItem('refresh_token')
     }
-    axios.post(url, body, {headers :this.setHeaders()})
-    .then(res => {
-      if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
-        this.setState ({
-            logged : true,
-            access_token : res.data.message
-        })
-        window.localStorage.setItem('access_token', res.data.message);
-      }
-    })
-    .catch(error => {
-      this.setState ({
-        logged : false
+    return new Promise((resolve, reject) => {
+      axios.post(url, body, {headers :this.setHeaders()})
+      .then(res => {
+        if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
+          this.setState ({
+              logged : true,
+              access_token : res.data.message
+          })
+          window.localStorage.setItem('access_token', res.data.message);
+          resolve();
+        }
       })
-      alert('유효하지 않은 접근입니다.');
-      window.location.href="/";
+      .catch(error => {
+        console.log("errr "+ error);
+        alert('유효하지 않은 접근입니다.');
+        reject();
+      });
     });
   }
-
+  
   //페이지 렌더링 전 토큰 검사 
   componentDidMount() {
     axios.get('/users/verifyToken', {headers :this.setHeaders()})
-    .then(res => {
+    .then(async res => {
       if(res.data.state === 'success') {
         this.setState ({
           logged : true
@@ -93,13 +88,7 @@ class Home extends Component {
         this.setState({
           logged: false
         });
-        if(res.data.message === 'jwt expired') this.requestAccessToken('/users/verifyToken');
-
-        else {
-          console.log(res.data.message);
-          alert('유효하지 않은 요청입니다.');
-          window.location.href="/";
-        }
+        await this.requestAccessToken('/users/verifyToken');
       }
     })
     .catch(error => {
