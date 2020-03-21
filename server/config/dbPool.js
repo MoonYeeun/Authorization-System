@@ -1,5 +1,5 @@
-const mysql= require('mysql');
-//const mysql= require('promise-mysql');
+//const mysql=require('mysql');
+const mysql=require('promise-mysql');
 
 const dbConfig={
 	host:'localhost',
@@ -9,4 +9,5 @@ const dbConfig={
 	database:'auth',
 	connectionLimit:20
 };
+
 module.exports=mysql.createPool(dbConfig);

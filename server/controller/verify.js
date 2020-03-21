@@ -54,6 +54,7 @@ module.exports = {
 
             if(result === args[1] && typeof refresh_verify.key !== 'undefined') {
                 let access_token = jwt.sign(args[0]);
+                console.log('access 토큰 발급 ' + access_token);
                 resolve ({
                     state: 'success',
                     message: access_token

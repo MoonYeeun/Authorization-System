@@ -17,19 +17,18 @@ module.exports = {	// 두 개의 메소드 module화
 
 	}, //회원가입
 	queryParam_Arr : async (...args) => {
-		const query = args[0]; 
-		const value = args[1];
-		console.log('queryParam_arr 들어옴');
+		const query = args[0];
+		const value = args[1];	// array
+		let result;
 
-		return new Promise( async (resolve,reject) => {
-			pool.getConnection( (err, connection) => {
-				if(err) reject(err);
-				connection.query(query,value, (err,result) => {
-					if(err) return reject(err);
-					connection.release();
-					resolve(result);
-				});
-			});
-		});
+		try {
+			var connection = await pool.getConnection();			
+			result = await connection.query(query, value) || null;	
+		} catch(err) {
+			next(err);
+		} finally {
+			pool.releaseConnection(connection);	// waterfall 에서는 connection.release()를 사용했지만, 이 경우 pool.releaseConnection(connection) 을 해준다.
+			return result;
+		}
 	}
 };

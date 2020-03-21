@@ -15,7 +15,6 @@ router.get('/:emailCode', async (req, res) => {
             message: err
         }) 
     });
-
     let user_data = JSON.parse(result);
     if(!user_data) res.redirect('http://localhost:3000/EmailVerifyFail');
     else {
@@ -32,18 +31,18 @@ router.get('/:emailCode', async (req, res) => {
                 user_data.user_name, 
                 user_data.user_salt
             ]
-            let insertResult = db.queryParam_Arr(insertQuery, value);
-    
-            if (!insertResult) {
+            
+            await db.queryParam_Arr(insertQuery, value)
+            .catch(err => {
                 console.log("DB Insert Error");
                 res.redirect('http://localhost:3000/EmailVerifyFail');
-            } else {    //정상적으로 회원가입 완료
-                console.log("Signup Success");
-                res.redirect('http://localhost:3000/EmailVerify');
-            }
+            });
+            
+            //정상적으로 회원가입 완료
+            console.log("Signup Success");
+            res.redirect('http://localhost:3000/EmailVerify');
         }
     }
-    
 });
 
 module.exports = router;
