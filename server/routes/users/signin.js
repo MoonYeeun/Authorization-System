@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
                 message : "Login Failed : Id error"
             });
         }
-        else (checkResult.length == 1) {     
+        else if (checkResult.length == 1) {     
             let pwHashed = await crypto.pbkdf2(user_pwd, checkResult[0].user_salt, 10000, 32, 'sha512');
             //사용자 아이디 비밀번호 일치할 경우 
             if (pwHashed.toString('base64') == checkResult[0].user_pwd) {
