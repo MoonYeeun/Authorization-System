@@ -3,7 +3,7 @@ import '../Layout/Layout.css'
 import GetUserList from './GetUserList';
 import axios from "axios";
 
-class AdminPage1 extends Component{
+class AdminPage extends Component{
   constructor(props) {
     super(props);
     this.state = {
@@ -60,17 +60,14 @@ class AdminPage1 extends Component{
   }
 
   render() {
-    console.log('admin 여부 '+this.props.admin);
-    console.log(this.state.user_list);
-    console.log('logged 여부'+ this.props.logged);
     return (
       <>
       <div className="content">
-      <p className="admin_title">{this.state.content}</p>
-      {this.state.user_list}
+        <p className="admin_title">{this.state.content}</p>
+        {this.state.user_list}
       </div>
       </>
     );  
   }    
 }
-export default AdminPage1;
+export default AdminPage;
