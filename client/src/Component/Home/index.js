@@ -5,7 +5,7 @@ import Footer from '../Layout/Footer';
 import '../Layout/Layout.css'
 import Content_Home from './Content_Home';
 import UserInfo from './UserInfo';
-import AdminPage1 from '../Home/AdminPage1';
+import AdminPage from './AdminPage';
 import axios from "axios";
 
 
@@ -29,6 +29,7 @@ class Home extends Component {
     }
     return headers;
   }
+
   //로그아웃 처리 
   handleLogout = () => {
     this.setState({
@@ -69,7 +70,6 @@ class Home extends Component {
         }
       })
       .catch(error => {
-        console.log("errr "+ error);
         alert('유효하지 않은 접근입니다.');
         reject();
       });
@@ -99,6 +99,8 @@ class Home extends Component {
   render() {
     console.log(this.state.logged);
     console.log(this.state.admin);
+
+    const {requestAccessToken, setHeaders } = this;
     return (
       <Router>
         <div className="App">
@@ -111,9 +113,13 @@ class Home extends Component {
           {/* <Switch> */}
           <Route exact path={this.props.match.path} component={Content_Home} />
           <Route path="/Home/Content_Home"  component={Content_Home} />
-          <Route path="/Home/UserInfo" render={(props) => <UserInfo {...props} logged = {this.state.logged}/>} />  
-          <Route path="/Home/AdminPage" render={(props) => <AdminPage1 {...props} logged = {this.state.logged}
-          admin = {this.state.admin} />} />   
+          <Route path="/Home/UserInfo" render={(props) => <UserInfo {...props} 
+          logged = {this.state.logged} 
+          requestAccessToken={requestAccessToken}
+          setHeaders={setHeaders}/>} />  
+          <Route path="/Home/AdminPage" render={(props) => <AdminPage {...props} logged = {this.state.logged}
+          requestAccessToken={requestAccessToken}
+          admin = {this.state.admin} setHeaders={setHeaders}/>} />   
           {/* </Switch> */}
           <Footer />
         </div>      

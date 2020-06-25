@@ -11,12 +11,8 @@ const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
 
 //회원가입
 router.post('/', async (req, res) => {
-    let user_data = {
-        user_id : req.body.user_id,
-        user_pwd : req.body.user_pwd,
-        user_name : req.body.user_name,
-        user_salt : ''
-    }
+    let user_data = { user_id, user_pwd, user_name, user_salt } = req.body;
+    
     if (!user_data.user_id || !user_data.user_pwd || !user_data.user_name) {
         res.send( {
             message : "NULL Value"

@@ -15,7 +15,7 @@ var mailSender = {
                 pass : ''
             }
         });
-        console.log(param.to);
+
         //메일 옵션
         var message = {
             to : param.to, //수신할 이메일

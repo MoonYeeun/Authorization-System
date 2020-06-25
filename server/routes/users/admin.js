@@ -7,7 +7,7 @@ const verify = require('../../controller/verify');
 //access token 검증 후 사용자 목록 불러오기  
 router.get('/', async (req, res) => {
     let access_token = req.headers['authorization'];
-    console.log('Get 사용자 정보 위한 검증 ' + verify);
+    console.log('Admin 사용자 정보 위한 검증 ');
 
     let result = await verify.token_verify(access_token)
     .catch((err) => {

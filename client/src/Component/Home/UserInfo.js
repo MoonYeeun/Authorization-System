@@ -14,15 +14,6 @@ class UserInfo extends Component {
     }
   }
 
-  setHeaders = () => {
-    let headers = {
-      'authorization' : localStorage.getItem('access_token'),
-      'Accept' : 'application/json',
-      'Content-Type': 'application/json'
-    }
-    return headers;
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.logged !== this.props.logged) {
       this.handleUserInfo(nextProps.logged);
@@ -31,41 +22,19 @@ class UserInfo extends Component {
   }
   
   handleUserInfo = (status) => {
-    if(status){
-      this.setState({
-        content: 'Hi !'
-      });
-    } else {
-      this.setState({
-        content: 'Not Found',
-        user_id: '',
-        user_name: ''
-      });
-    }
-  }
-  // 리프레시 토큰 검사 후 새로운 access token 발급
-  requestAccessToken = async (url) => {
-    let body = {
-      refresh_token : localStorage.getItem('refresh_token')
-    }
-    return new Promise((resolve, reject) => {
-      axios.post(url, body, {headers :this.setHeaders()})
-      .then(res => {
-        if(res.data.state === 'success') { //새롭게 발급받은 access token 저장 
-          window.localStorage.setItem('access_token', res.data.message);
-          resolve();
-        }
-      })
-      .catch(error => {
-        console.log("errr "+ error);
-        alert('유효하지 않은 접근입니다.');
-        reject();
-      });
+    status ? this.setState({content: 'Hi !'}) 
+    : this.setState({
+      content: 'Not Found',
+      user_id: '',
+      user_name: ''
     });
-  }
+}
+
   // user 목록 불러오기
   getUserList= async () => {
-    axios.get('/users/userInfo', {headers :this.setHeaders()})
+    const { requestAccessToken, setHeaders } = this.props;
+
+    axios.get('/users/userInfo', {headers : setHeaders()})
     .then(async res => {
       if(res.data.state === 'success') {
         this.setState ({
@@ -75,7 +44,7 @@ class UserInfo extends Component {
         })
       } else {
         this.handleUserInfo(false);
-        await this.requestAccessToken('/users/verifyToken');
+        await requestAccessToken('/users/verifyToken');
         this.getUserList();
       }
     })
