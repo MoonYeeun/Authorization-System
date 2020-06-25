@@ -12,25 +12,34 @@ class AdminPage1 extends Component{
     }
   }
 
-  handleAdmin= (status) => {
+  // 관리자 페이지 목록 불러오기 
+  getAdminList = async () => {
     const { requestAccessToken, setHeaders } = this.props;
+
+    axios.get('/users/admin', {headers : setHeaders()})
+    .then(async res => {
+      if(res.data.state === 'success') {
+        this.setState ({
+        content : 'Hi Administer',
+        user_list: <GetUserList user_list={res.data.message}/>
+        });
+      } else {
+        await requestAccessToken('/users/verifyToken');
+        this.handleAdmin(this.props.admin);
+      }}) 
+    .catch(error => {
+      window.location.href="/";
+    });
+  }
+
+  handleAdmin= (status) => {
+    const { requestAccessToken } = this.props;
     // admin 일 때
     if(status === '1'){ 
-        axios.get('/users/admin', {headers : setHeaders()})
-        .then(async res => {
-        if(res.data.state === 'success') {
-          this.setState ({
-          content : 'Hi Administer',
-          user_list: <GetUserList user_list={res.data.message}/>
-          });
-        } else {
-          await requestAccessToken('/users/verifyToken');
-          this.handleAdmin(this.props.admin);
-        }}) 
-        .catch(error => {
-          window.location.href="/";
-        });
-    } else { // 아닐 때
+        this.getAdminList();
+    } 
+    // 아닐 때
+    else { 
       requestAccessToken('/users/verifyToken')
       .catch(error => {
         window.location.href="/";
