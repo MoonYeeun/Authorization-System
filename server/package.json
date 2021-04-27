@@ -20,7 +20,7 @@
     "nodemailer-juice": "^1.0.1",
     "nodemailer-smtp-transport": "^2.7.4",
     "promise-mysql": "^3.3.1",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "styliner": "^1.0.4"
   }
 }
